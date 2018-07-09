@@ -46,13 +46,41 @@ const ALL_PRODUCTS = gql `
 }
 `;
 
+const PRODUCTS_BY_PRICE = gql `
+{
+  shop {
+    products(first: 10) {
+      edges {
+        node {
+          title
+          variants(first:10) {
+            edges {
+              node {
+                price
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
 const PRODUCTS_BY_ISBN = gql `
 {
   shop {
-    products(first: 5, orderBy:barcode_ASC) {
+    products(first: 10) {
       edges {
         node {
-          barcode
+          title
+          variants(first:10) {
+            edges {
+              node {
+                barcode
+              }
+            }
+          }
         }
       }
     }
@@ -86,7 +114,6 @@ export default function CollectionPage() {
           <SkeletonBodyText />
           </TextContainer>
           </Card>
-
           </Layout.Section>
           </Layout>
 
@@ -129,7 +156,7 @@ export default function CollectionPage() {
       }
       </Query>
 
-      <Query query={PRODUCTS_BY_ISBN}>
+      <Query query={PRODUCTS_BY_PRICE}>
       {
         ({loading, error, data}) => {
           if (loading)
@@ -147,7 +174,7 @@ export default function CollectionPage() {
             </Layout>
 
             <div>
-            <DisplayText size="small">LOADING...</DisplayText>
+            <DisplayText size="small">LOADING by price...</DisplayText>
             <Spinner size="large" color="teal" />
             </div>
             </SkeletonPage>
@@ -156,7 +183,7 @@ export default function CollectionPage() {
           if (error)
           return (
             <Banner
-            title="Failed to load Collection content"
+            title="Failed to load Collection by price"
             action={{content: 'Go Back Home', url: '/'}}
             status="critical"
             >
