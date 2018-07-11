@@ -37,7 +37,6 @@ const ALL_PRODUCTS = gql `
     products(first: 10) {
       edges {
         node {
-          id
           title
         }
       }
@@ -46,13 +45,14 @@ const ALL_PRODUCTS = gql `
 }
 `;
 
-const PRODUCTS_BY_PRICE = gql `
+const PRODUCTS_BY_TITLE = gql `
 {
   shop {
-    products(first: 10) {
+    products(first: 10, sortKey: TITLE) {
       edges {
         node {
           title
+          description
           variants(first:10) {
             edges {
               node {
@@ -70,7 +70,7 @@ const PRODUCTS_BY_PRICE = gql `
 const PRODUCTS_BY_ISBN = gql `
 {
   shop {
-    products(first: 10) {
+    products(first:10) {
       edges {
         node {
           title
@@ -156,7 +156,7 @@ export default function CollectionPage() {
       }
       </Query>
 
-      <Query query={PRODUCTS_BY_PRICE}>
+      <Query query={PRODUCTS_BY_TITLE}>
       {
         ({loading, error, data}) => {
           if (loading)
@@ -197,12 +197,15 @@ export default function CollectionPage() {
               singular: 'product',
               plural: 'products'
             }} items={products} renderItem={(item) => {
-              const {id, title, price} = item.node;
+              const {id, title, price, description} = item.node;
               const media = <Avatar customer="customer" size="medium" name={title}/>;
 
               return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
                 <h3>
-                <TextStyle variation="strong">{title}</TextStyle>
+                <DisplayText size="medium">{title}</DisplayText>
+                <DisplayText size="small">{description}</DisplayText>
+                
+                <Badge>{price}</Badge>
                 </h3>
                 </ResourceList.Item>);
               }}/>
