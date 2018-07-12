@@ -117,7 +117,7 @@ export default function CollectionPage() {
 
           <div>
           <DisplayText size="small">LOADING...</DisplayText>
-          <Spinner size="large" color="teal" />
+          <Spinner size="small" color="teal" />
           </div>
           </SkeletonPage>
         );
@@ -142,10 +142,18 @@ export default function CollectionPage() {
             const {id, title, price} = item.node;
             const media = <Avatar customer="customer" size="medium" name={title}/>;
 
-            return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
+            return (
+              <ResourceList.Item
+              id={id}
+              media={media}
+              accessibilityLabel={`View details for ${title}`}>
               <h3>
               <TextStyle variation="strong">{title}</TextStyle>
               </h3>
+              <Button
+              onClick={() => {
+                console.log('clicked');
+              }}>Delete</Button>
               </ResourceList.Item>);
             }}/>
             </Card>
@@ -173,7 +181,7 @@ export default function CollectionPage() {
 
             <div>
             <DisplayText size="small">LOADING...</DisplayText>
-            <Spinner size="large" color="teal" />
+            <Spinner size="small" color="teal" />
             </div>
             </SkeletonPage>
           );
@@ -232,7 +240,7 @@ export default function CollectionPage() {
 
               <div>
               <DisplayText size="small">LOADING...</DisplayText>
-              <Spinner size="large" color="teal" />
+              <Spinner size="small" color="teal" />
               </div>
               </SkeletonPage>
             );

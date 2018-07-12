@@ -68,9 +68,8 @@ export default class WriteReviewForm extends React.Component {
       <Mutation mutation={CREATE_PRODUCT}>
       {
         (createProduct, mutationResults) => {
-          const loading = mutationResults.loading &&
-
-          <SkeletonPage title="Products" secondaryActions={1}>
+          const loading = mutationResults.loading && (
+         <SkeletonPage title="Products" secondaryActions={1}>
             <Layout>
               <Layout.Section>
                 <Card sectioned>
@@ -78,7 +77,7 @@ export default class WriteReviewForm extends React.Component {
                 </Card>
               </Layout.Section>
             </Layout>
-          </SkeletonPage>
+          </SkeletonPage>);
 
           const error = mutationResults.error && <p>error creating product</p>
 
@@ -101,7 +100,6 @@ export default class WriteReviewForm extends React.Component {
                 <TextField label="Description" value={descriptionHtml} placeholder="The most mysterious novel in existance..." type="text" onChange={this.handleChange('descriptionHtml')}/>
                 <TextField label="Vendor" value={vendor} placeholder="Indigo" type="text" onChange={this.handleChange('vendor')}/>
                 <TextField label="Price" value={price} type="number" onChange={this.handleChange('price')} helpText={<div> Please enter only numbers for prices</div>}/>
-
                 </FormLayout>
                 </Card>
                 </Page>)
