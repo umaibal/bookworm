@@ -1,14 +1,10 @@
 import React from 'react';
 import {
   AppProvider,
-  Avatar,
   Badge,
   Card,
-  Button,
-  Icon,
   TextField,
   FormLayout,
-  Stack,
   Form,
   Page,
 } from '@shopify/polaris';
@@ -40,7 +36,7 @@ export default class WriteReviewForm extends React.Component {
   state = {
     title: '',
     price: 0,
-    description: '',
+    descriptionHtml: '',
     vendor: '',
   };
 
@@ -49,19 +45,19 @@ export default class WriteReviewForm extends React.Component {
   };
 
   render() {
-    const {title, price, description, vendor} = this.state;
+    const {title, price, descriptionHtml, vendor} = this.state;
 
     function mutate(createProduct) {
       const productInput = {
         title: title,
-        description: description,
+        descriptionHtml: descriptionHtml,
         vendor: vendor
       };
 
       createProduct({
         variables: {product: productInput},
       });
-      console.log("THIS WORKS WOOOOOO-MUTATION success");
+      console.log("mutation is a success");
     }
 
     return (
@@ -81,15 +77,18 @@ export default class WriteReviewForm extends React.Component {
 
         return (
           <Page>
-          <Card title="Create a New Book" sectioned>
+          <Card title="Create a New Book" sectioned
+              secondaryFooterAction={{
+                content: 'CREATE',
+                onAction: () => {
+                  mutate(createProduct);
+                }}}>
           <FormLayout>
           <TextField label="Book Name" value={title} placeholder="Your Favorite Book" type="text" onChange={this.handleChange('title')}/>
-          <TextField label="Description" value={description} placeholder="The most mysterious novel in existance..." type="text" onChange={this.handleChange('description')}/>
+          <TextField label="Description" value={descriptionHtml} placeholder="The most mysterious novel in existance..." type="text" onChange={this.handleChange('descriptionHtml')}/>
           <TextField label="Vendor" value={vendor} placeholder="Indigo" type="text" onChange={this.handleChange('vendor')}/>
-
           <TextField label="Price" value={price} type="number" onChange={this.handleChange('price')} helpText={<div> Please enter only numbers for prices</div>}/>
 
-          <Button onClick={() => mutate(createProduct)}>CREATE</Button>
           </FormLayout>
           </Card>
           </Page>)
