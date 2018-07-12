@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-  AppProvider,
-  Badge,
   Card,
   TextField,
   FormLayout,
-  Form,
   Page,
   SkeletonPage,
   SkeletonBodyText,
-  SkeletonDisplayText,
 } from '@shopify/polaris';
 import {Mutation, ApolloProvider} from 'react-apollo';
 import ApolloClient, {gql} from 'apollo-boost';

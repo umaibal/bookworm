@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-  AppProvider,
   Avatar,
   Badge,
   Card,
   Button,
-  Icon,
-  TextField,
   DisplayText,
   Banner,
-  FilterType,
   ResourceList,
   TextStyle,
   SkeletonPage,
@@ -17,7 +13,6 @@ import {
   SkeletonDisplayText,
   Layout,
   TextContainer,
-  Page,
   Spinner,
 } from '@shopify/polaris';
 import CollectionTitle from '../CollectionTitle';
@@ -28,13 +23,11 @@ import Fetch from 'react-fetch-component';
 import ApolloClient, { gql } from 'apollo-boost';
 import { ApolloProvider, Mutation, Query } from 'react-apollo';
 
-
-
-
 // mutation to delete product
 const DELETE_PRODUCT = gql`
-mutation DeleteProduct($product: ProductDeleteInput!) {
-  productDelete(input: $product) {
+mutation productDelete($input: ProductDeleteInput!) {
+  productDelete(input: $input) {
+    deletedProductId
     product {
       id
       title
@@ -107,32 +100,34 @@ const client = new ApolloClient({
   },
 });
 
-
 export default class CollectionPage extends React.Component {
 
-  // set up state here
   state = {
-    id: 12345
-  }
+    id: ''
+  };
 
-  // handle change function
   handleChange = (field) => {
     return (value) => this.setState({ [field]: value });
   };
 
-  render() {
+  handleSubmit = (event) => {
+    this.setState({ id: '' });
+  };
 
-    function mutate(deleteProduct) {
+  render() {
+    const { id } = this.state;
+
+    function mutate(id, productDelete) {
       const productDeleteInput = {
-        id: ID
+        id: id,
       };
 
-      deleteProduct({
-        variables: { product: productDeleteInput },
+      productDelete({
+        variables: { input: productDeleteInput },
       });
+
       console.log("delete mutation is successful");
     }
-
 
     return (
       <ApolloProvider client={client}>
@@ -174,57 +169,46 @@ export default class CollectionPage extends React.Component {
                 );
 
               const products = data.shop.products.edges;
+              
               return (
-                // try putting delete mutation here so
-                // button to delete can be rendered
-                // along with card layout:
-                <Mutation mutation={DELETE_PRODUCT}>
-                  {
-                    (deleteProduct, mutationResults) => {
-                      const loading = mutationResults.loading && <p>Loading...</p>
-                      const error = mutationResults.error && <p>error creating product</p>
-                      const success = mutationResults.data && (
-                        <p>successfully created &nbsp;
+                <Card>
+                  <ResourceList resourceName={{
+                    singular: 'product',
+                    plural: 'products'
+                  }} items={products} renderItem={(item) => {
+                    const { id, title } = item.node;
+                    const media = <Avatar customer="customer" size="medium" name={title} />;
+
+                    return (
+                      <ResourceList.Item
+                        id={id}
+                        media={media}
+                        accessibilityLabel={`View details for ${title}`}>
+                        <h3>
+                          <TextStyle variation="strong">{title}</TextStyle>
+                        </h3>
+                        <Mutation mutation={DELETE_PRODUCT}>
+                          {
+                            (productDelete, mutationResults) => {
+                              const loading = mutationResults.loading && <p>Loading...</p>
+                              const error = mutationResults.error && <p>error creating product</p>
+                              const success = mutationResults.data && (
+                                <p>successfully created &nbsp;
                           {mutationResults.data.productCreate.product.title}
-                        </p>);
-
-                      return (
-
-                        <Card>
-                          <ResourceList resourceName={{
-                            singular: 'product',
-                            plural: 'products'
-                          }} items={products} renderItem={(item) => {
-                            const { id, title } = item.node;
-                            const media = <Avatar customer="customer" size="medium" name={title} />;
-
-                            return (
-                              <ResourceList.Item
-                                id={id}
-                                media={media}
-                                accessibilityLabel={`View details for ${title}`}>
-                                <h3>
-                                  <TextStyle variation="strong">{title}</TextStyle>
-                                </h3>
-
-                                <Button
-                                  onClick={() => {
-                                    mutate(deleteProduct);
-                                    console.log('clicked');
-                                  }}>Delete</Button>
-
-                              </ResourceList.Item>);
-                          }} />
-                        </Card>
-
-                      )
-                    }
+                                </p>);
+                              return (
+                                <Button onClick={() => {
+                                  mutate(id, productDelete);
+                                  console.log('clicked delete button!!');
+                                }}>Delete</Button>);
+                            }
+                          }
+                        </Mutation>
+                      </ResourceList.Item>);
                   }
-                </Mutation>
-
-
-
-              );
+                  } />
+                </Card>
+              )
             }
           }
         </Query>
@@ -371,7 +355,7 @@ export default class CollectionPage extends React.Component {
           }
         </Query>
       </ApolloProvider>
-    )
+    );
   }
 
 }
