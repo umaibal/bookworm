@@ -7,18 +7,16 @@ import {
   Button,
   Icon,
   TextField,
+  FormLayout,
   Stack,
   Form,
   Page,
 } from '@shopify/polaris';
-import {Mutation} from 'react-apollo';
-import {gql} from 'apollo-boost';
+import {Mutation, ApolloProvider} from 'react-apollo';
+import ApolloClient, {gql} from 'apollo-boost';
 import Rating from '../Rating';
 import GameList from '../GameList';
 import Fetch from 'react-fetch-component';
-// import './WriteReviewForm.css';
-import ApolloClient from 'apollo-boost';
-import {ApolloProvider} from 'react-apollo';
 
 const client = new ApolloClient({
   fetchOptions: {
@@ -32,6 +30,8 @@ mutation CreateProduct($product: ProductInput!) {
     product {
       id
       title
+      description
+      vendor
     }
   }
 }
@@ -39,82 +39,64 @@ mutation CreateProduct($product: ProductInput!) {
 
 export default class WriteReviewForm extends React.Component {
   state = {
-    customerName: '',
-    productName: '',
-    rating: 0,
-    reviewText: '',
+    title: '',
+    price: 0,
+    description: '',
+    vendor: '',
   };
 
-  handleChange = (value, id) => {
-    this.setState({[id]: value});
+  handleChange = (field) => {
+    return(value) => this.setState({[field]: value});
   };
 
   render() {
+    const {title, price, description, vendor} = this.state;
+
+    function mutate(createProduct) {
+      const productInput = {
+        title: title,
+        description: description,
+        vendor: vendor
+      };
+
+      createProduct({
+        variables: {product: productInput},
+      });
+      console.log("THIS WORKS WOOOOOO-MUTATION success");
+    }
+
     return (
       <ApolloProvider client={client}>
-      <Page
-      primaryAction={{content: 'Create'}}>
-      <Fetch url="https://boardgameslist.herokuapp.com" as="json">
-        {(fetchResults) => {
-          if (fetchResults.loading) {
-            return <p>Loading</p>
+      <Mutation mutation={CREATE_PRODUCT}>
+      {
+        (createProduct, mutationResults) => {
+          const loading = mutationResults.loading && <p>loading...</p>
+
+          const error = mutationResults.error && <p>error creating product</p>
+
+          const success = mutationResults.data && (
+            <p>successfully created &nbsp; {
+            mutationResults.data.productCreate.product.title
           }
+        </p>);
 
-          if (fetchResults.error) {
-            return <p>failed to fetch games</p>
-          }
+        return (
+          <Page>
+          <Card title="Create a New Book" sectioned>
+          <FormLayout>
+          <TextField label="Book Name" value={title} placeholder="Your Favorite Book" type="text" onChange={this.handleChange('title')}/>
+          <TextField label="Description" value={description} placeholder="The most mysterious novel in existance..." type="text" onChange={this.handleChange('description')}/>
+          <TextField label="Vendor" value={vendor} placeholder="Indigo" type="text" onChange={this.handleChange('vendor')}/>
 
-          // return <GameList games={fetchResults.data} />
-        }}
+          <TextField label="Price" value={price} type="number" onChange={this.handleChange('price')} helpText={<div> Please enter only numbers for prices</div>}/>
 
-      </Fetch>
-
-
-      <React.Fragment>
-      <link rel="stylesheet" href="https://sdks.shopifycdn.com/polaris/2.2.0/polaris.min.css" />
-
-      <AppProvider>
-      <Form>
-      <Stack spacing="loose" vertical>
-      <Stack.Item>
-      <Card title="Create a New Book" sectioned>
-      <Stack vertical>
-      <Stack alignment="center">
-      <Stack.Item fill>
-      <TextField
-      placeholder="Book Name"
-      id="productName"
-      value={this.state.productName}
-      onChange={this.handleChange}
-      />
-      </Stack.Item>
-      <Stack.Item>
-      <Rating
-      value={this.state.rating}
-      id="rating"
-      onChange={this.handleChange}
-      />
-      </Stack.Item>
-      </Stack>
-      <Stack>
-      <Stack.Item fill>
-      <TextField
-      placeholder="Write your description here..."
-      id="reviewText"
-      value={this.state.reviewText}
-      onChange={this.handleChange}
-      multiline
-      />
-      </Stack.Item>
-      </Stack>
-      </Stack>
-      </Card>
-      </Stack.Item>
-      </Stack>
-      </Form>
-      </AppProvider>
-      </React.Fragment>
-      </Page>
+          <Button onClick={() => mutate(createProduct)}>CREATE</Button>
+          </FormLayout>
+          </Card>
+          </Page>)
+        }
+      }
+    </Mutation>
     </ApolloProvider>
     );
   }
