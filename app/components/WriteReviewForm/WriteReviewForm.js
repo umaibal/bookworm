@@ -7,6 +7,9 @@ import {
   FormLayout,
   Form,
   Page,
+  SkeletonPage,
+  SkeletonBodyText,
+  SkeletonDisplayText,
 } from '@shopify/polaris';
 import {Mutation, ApolloProvider} from 'react-apollo';
 import ApolloClient, {gql} from 'apollo-boost';
@@ -65,37 +68,47 @@ export default class WriteReviewForm extends React.Component {
       <Mutation mutation={CREATE_PRODUCT}>
       {
         (createProduct, mutationResults) => {
-          const loading = mutationResults.loading && <p>loading...</p>
+          const loading = mutationResults.loading &&
+
+          <SkeletonPage title="Products" secondaryActions={1}>
+            <Layout>
+              <Layout.Section>
+                <Card sectioned>
+                  <SkeletonBodyText />
+                </Card>
+              </Layout.Section>
+            </Layout>
+          </SkeletonPage>
 
           const error = mutationResults.error && <p>error creating product</p>
 
           const success = mutationResults.data && (
             <p>successfully created &nbsp; {
-            mutationResults.data.productCreate.product.title
-          }
-        </p>);
+              mutationResults.data.productCreate.product.title
+            }
+            </p>);
 
-        return (
-          <Page>
-          <Card title="Create a New Book" sectioned
+            return (
+              <Page>
+              <Card title="Create a New Book" sectioned
               secondaryFooterAction={{
                 content: 'CREATE',
                 onAction: () => {
                   mutate(createProduct);
                 }}}>
-          <FormLayout>
-          <TextField label="Book Name" value={title} placeholder="Your Favorite Book" type="text" onChange={this.handleChange('title')}/>
-          <TextField label="Description" value={descriptionHtml} placeholder="The most mysterious novel in existance..." type="text" onChange={this.handleChange('descriptionHtml')}/>
-          <TextField label="Vendor" value={vendor} placeholder="Indigo" type="text" onChange={this.handleChange('vendor')}/>
-          <TextField label="Price" value={price} type="number" onChange={this.handleChange('price')} helpText={<div> Please enter only numbers for prices</div>}/>
+                <FormLayout>
+                <TextField label="Book Name" value={title} placeholder="Your Favorite Book" type="text" onChange={this.handleChange('title')}/>
+                <TextField label="Description" value={descriptionHtml} placeholder="The most mysterious novel in existance..." type="text" onChange={this.handleChange('descriptionHtml')}/>
+                <TextField label="Vendor" value={vendor} placeholder="Indigo" type="text" onChange={this.handleChange('vendor')}/>
+                <TextField label="Price" value={price} type="number" onChange={this.handleChange('price')} helpText={<div> Please enter only numbers for prices</div>}/>
 
-          </FormLayout>
-          </Card>
-          </Page>)
+                </FormLayout>
+                </Card>
+                </Page>)
+              }
+            }
+            </Mutation>
+            </ApolloProvider>
+          );
         }
       }
-    </Mutation>
-    </ApolloProvider>
-    );
-  }
-}
