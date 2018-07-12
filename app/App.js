@@ -1,6 +1,5 @@
 import React from 'react';
 import ProductList from './components/ProductList';
-import GameList from './components/GameList';
 import WriteReviewForm from './components/WriteReviewForm';
 import CollectionPage from './components/CollectionPage';
 import SearchPage from './components/SearchPage';
