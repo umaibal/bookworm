@@ -28,9 +28,8 @@ const DELETE_PRODUCT = gql`
 mutation productDelete($input: ProductDeleteInput!) {
   productDelete(input: $input) {
     deletedProductId
-    product {
+    shop {
       id
-      title
     }
   }
 }
@@ -193,14 +192,11 @@ export default class CollectionPage extends React.Component {
                               const loading = mutationResults.loading && <p>Loading...</p>
                               const error = mutationResults.error && <p>error creating product</p>
                               const success = mutationResults.data && (
-                                <p>successfully created &nbsp;
-                          {mutationResults.data.productCreate.product.title}
-                                </p>);
+                                <p>successfully created</p>);
                               return (
                                 <Button onClick={() => {
-                                  mutate(id, productDelete);
-                                  console.log('clicked delete button!!');
-                                }}>Delete</Button>);
+                                  mutate(id, productDelete)
+                                }} submit>Delete</Button>);
                             }
                           }
                         </Mutation>
