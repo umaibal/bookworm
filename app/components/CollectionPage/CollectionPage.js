@@ -30,11 +30,11 @@ import Fetch from 'react-fetch-component';
 import ApolloClient, {gql} from 'apollo-boost';
 import {ApolloProvider, Mutation, Query} from 'react-apollo';
 
-// first query to get all products
+// first query to get all products:
 const ALL_PRODUCTS = gql `
 {
   shop {
-    products(first: 10) {
+    products(first: 20) {
       edges {
         node {
           title
@@ -45,15 +45,17 @@ const ALL_PRODUCTS = gql `
 }
 `;
 
+// second query to sort all products by title:
 const PRODUCTS_BY_TITLE = gql `
 {
   shop {
-    products(first: 10, sortKey: TITLE) {
+    products(first: 20, sortKey: TITLE) {
       edges {
         node {
           title
           description
-          variants(first:10) {
+          vendor
+          variants(first:20) {
             edges {
               node {
                 price
@@ -67,20 +69,17 @@ const PRODUCTS_BY_TITLE = gql `
 }
 `;
 
-const PRODUCTS_BY_ISBN = gql `
+// third query to get
+// all products sorted by vendor
+const PRODUCTS_BY_VENDOR = gql `
 {
   shop {
-    products(first:10) {
+    products(first: 20, sortKey: VENDOR) {
       edges {
         node {
           title
-          variants(first:10) {
-            edges {
-              node {
-                barcode
-              }
-            }
-          }
+          description
+          vendor
         }
       }
     }
@@ -197,14 +196,19 @@ export default function CollectionPage() {
               singular: 'product',
               plural: 'products'
             }} items={products} renderItem={(item) => {
-              const {id, title, price, description} = item.node;
+              const {id, title, price, description, vendor} = item.node;
               const media = <Avatar customer="customer" size="medium" name={title}/>;
 
               return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
                 <h3>
                 <DisplayText size="medium">{title}</DisplayText>
                 <DisplayText size="small">{description}</DisplayText>
-                
+
+                <Badge>{vendor}</Badge>
+
+
+
+
                 <Badge>{price}</Badge>
                 </h3>
                 </ResourceList.Item>);

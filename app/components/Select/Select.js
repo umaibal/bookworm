@@ -1,41 +1,21 @@
-import React from 'react';
-import {gql} from 'apollo-boost';
-import {
-  Select,
-  Button
-} from '@shopify/polaris';
+import React from "react";
+import { Select } from "@shopify/polaris";
 
-//query to get products by their isbn:
-// const PRODUCTS_BY_ISBN = gql `
-// {
-//   shop {
-//     products(first: 5) {
-//       edges {
-//         node {
-//           barcode
-//         }
-//       }
-//     }
-//   }
-// }
-// `;
-
-class SelectExample extends React.Component {
+export default class SelectExample extends React.Component {
   state = {
-    selected: 'title',
+    selected: "none"
   };
 
-  handleChange = (newValue) => {
-    this.setState({selected: newValue});
-
-    // query for data based on new change:
-
+  handleChange = newValue => {
+    this.setState({ selected: newValue });
   };
 
   render() {
     const options = [
-      {label: 'Title', value: 'title'},
-      {label: 'ISBN', value: 'isbn'},
+      { label: "None", value: "none" },
+      { label: "Title", value: "title" },
+      { label: "Vendor", value: "vendor" },
+      { label: "Something", value: "something" }
     ];
 
     return (
@@ -48,5 +28,3 @@ class SelectExample extends React.Component {
     );
   }
 }
-
-export default Select;
