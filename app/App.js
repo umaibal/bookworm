@@ -3,6 +3,7 @@ import WriteReviewForm from './components/WriteReviewForm';
 import CollectionPage from './components/CollectionPage';
 import SearchPage from './components/SearchPage';
 import WelcomePage from './components/WelcomePage';
+import About from './components/About'
 import ApolloClient from 'apollo-boost';
 import { AppProvider, Page } from '@shopify/polaris';
 import { Switch, Route, withRouter } from 'react-router';
@@ -29,7 +30,7 @@ export default function () {
               <Route exact path="/new" component={WriteReviewForm} />
               <Route exact path="/collection" component={CollectionPage} />
               <Route exact path="/search" component={SearchPage} />
-              <Route exact path="/about" />
+              <Route exact path="/about" component={About}/>
             </Switch>
           </React.Fragment>
         </Page>

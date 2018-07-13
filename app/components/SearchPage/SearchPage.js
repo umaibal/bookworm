@@ -1,14 +1,7 @@
 import React from 'react';
 import {
   AppProvider,
-  Avatar,
-  Badge,
-  Card,
   Button,
-  Icon,
-  TextField,
-  Stack,
-  Form,
 } from '@shopify/polaris';
 
 import SearchTitle from '../SearchTitle';

@@ -214,26 +214,6 @@ export default class CollectionPage extends React.Component {
         </Query>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <Query query={PRODUCTS_BY_TITLE}>
           {
             ({ loading, error, data }) => {
@@ -275,14 +255,15 @@ export default class CollectionPage extends React.Component {
                     singular: 'product',
                     plural: 'products'
                   }} items={products} renderItem={(item) => {
-                    const { id, title, price, description, vendor } = item.node;
+                    const { id, title, description, vendor } = item.node;
+                    const {price} = item.node.variants.edges[0].node;
                     const media = <Avatar customer="customer" size="medium" name={title} />;
 
                     return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
                       <h3>
                         <DisplayText size="medium">{title}</DisplayText>
                         <DisplayText size="small">{description}</DisplayText>
-
+                        <Badge status="info">{price}</Badge>
                         <Badge>{vendor}</Badge>
                       </h3>
                     </ResourceList.Item>);
@@ -292,9 +273,6 @@ export default class CollectionPage extends React.Component {
             }
           }
         </Query>
-
-
-
 
 
         <Query query={PRODUCTS_BY_VENDOR}>
@@ -355,14 +333,13 @@ export default class CollectionPage extends React.Component {
           }
         </Query>
 
+          {/* Fetch Data from Studio Ghibli's API */}
         <Fetch url="https://ghibliapi.herokuapp.com/films/">
           {(fetchResults) => {
             let films = fetchResults.data;
-            console.log(fetchResults)
             if (films) {
-              console.log(films.title);
-            return(
-              <Card>
+              return (
+                <Card>
                   <ResourceList resourceName={{
                     singular: 'film',
                     plural: 'films'
@@ -378,7 +355,8 @@ export default class CollectionPage extends React.Component {
                     </ResourceList.Item>);
                   }} />
                 </Card>
-            )}
+              )
+            }
           }}
         </Fetch>
       </ApolloProvider>
