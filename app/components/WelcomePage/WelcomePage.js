@@ -1,19 +1,6 @@
 import React from 'react';
-import WelcomeTitle from '../WelcomeTitle';
 import WelcomeText from '../WelcomeText';
-import WriteReviewForm from '../WriteReviewForm';
-import CollectionPage from '../CollectionPage';
-import SearchPage from '../SearchPage';
 import {
-  AppProvider,
-  Avatar,
-  Badge,
-  Card,
-  Button,
-  Icon,
-  TextField,
-  Stack,
-  Form,
   Page,
   DisplayText,
 } from '@shopify/polaris';
@@ -33,6 +20,7 @@ class WelcomePage extends React.Component {
       ]}
       >
       <DisplayText size="medium">Where you can never lose track of a book!</DisplayText>
+      <WelcomeText/>
       </Page>
       </React.Fragment>
     );

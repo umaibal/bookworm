@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Avatar,
   Badge,
+  Banner,
   Card,
   Button,
   DisplayText,
-  Banner,
   ResourceList,
   TextStyle,
   SkeletonPage,
@@ -51,7 +51,8 @@ const ALL_PRODUCTS = gql`
 }
 `;
 
-// second query to sort all products by title:
+// second query to SORT all products by title
+// and display price attributes as well:
 const PRODUCTS_BY_TITLE = gql`
 {
   shop {
@@ -75,8 +76,8 @@ const PRODUCTS_BY_TITLE = gql`
 }
 `;
 
-// third query to get
-// all products sorted by vendor
+// third query to SORT all products
+// by vendor:
 const PRODUCTS_BY_VENDOR = gql`
 {
   shop {
@@ -98,6 +99,8 @@ const client = new ApolloClient({
     credentials: 'include',
   },
 });
+
+let fetchTitles = [];
 
 export default class CollectionPage extends React.Component {
 
@@ -168,7 +171,7 @@ export default class CollectionPage extends React.Component {
                 );
 
               const products = data.shop.products.edges;
-              
+
               return (
                 <Card>
                   <ResourceList resourceName={{
@@ -196,7 +199,8 @@ export default class CollectionPage extends React.Component {
                               return (
                                 <Button onClick={() => {
                                   mutate(id, productDelete)
-                                }} submit>Delete</Button>);
+                                }} submit>Delete</Button>
+                              );
                             }
                           }
                         </Mutation>
@@ -350,6 +354,33 @@ export default class CollectionPage extends React.Component {
             }
           }
         </Query>
+
+        <Fetch url="https://ghibliapi.herokuapp.com/films/">
+          {(fetchResults) => {
+            let films = fetchResults.data;
+            console.log(fetchResults)
+            if (films) {
+              console.log(films.title);
+            return(
+              <Card>
+                  <ResourceList resourceName={{
+                    singular: 'film',
+                    plural: 'films'
+                  }} items={films} renderItem={(film) => {
+                    const { id, title, description } = film;
+                    const media = <Avatar customer="customer" size="medium" name={title} />;
+
+                    return (<ResourceList.Item id={id} media={media} accessibilityLabel={`View details for ${title}`}>
+                      <h3>
+                        <DisplayText size="medium">{title}</DisplayText>
+                        <DisplayText size="small">{description}</DisplayText>
+                      </h3>
+                    </ResourceList.Item>);
+                  }} />
+                </Card>
+            )}
+          }}
+        </Fetch>
       </ApolloProvider>
     );
   }
