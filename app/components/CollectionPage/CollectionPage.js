@@ -15,9 +15,6 @@ import {
   TextContainer,
   Spinner,
 } from '@shopify/polaris';
-import CollectionTitle from '../CollectionTitle';
-import WelcomePage from '../WelcomePage';
-import SearchBar from '../SearchBar';
 import Select from '../Select';
 import Fetch from 'react-fetch-component';
 import ApolloClient, { gql } from 'apollo-boost';

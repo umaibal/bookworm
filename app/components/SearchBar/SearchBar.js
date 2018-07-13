@@ -22,17 +22,6 @@ class SearchBar extends React.Component {
       />
       </React.Fragment>
     );
-    // else if author search selected
-    /*
-    return (
-      <TextField
-        label="Type author name here"
-        value={this.state.value}
-        onChange={this.handleChange}
-        placeholder="e.g. Harper Lee, Stephen King"
-      />
-    );
-    */
   }
 }
 export default SearchBar;

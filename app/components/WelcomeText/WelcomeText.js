@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  Card,
-  Stack,
   DisplayText
 } from '@shopify/polaris';
 

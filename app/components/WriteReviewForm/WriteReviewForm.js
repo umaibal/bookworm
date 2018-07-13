@@ -9,8 +9,6 @@ import {
 } from '@shopify/polaris';
 import {Mutation, ApolloProvider} from 'react-apollo';
 import ApolloClient, {gql} from 'apollo-boost';
-import Rating from '../Rating';
-import Fetch from 'react-fetch-component';
 
 const client = new ApolloClient({
   fetchOptions: {
